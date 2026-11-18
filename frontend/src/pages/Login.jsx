@@ -173,7 +173,7 @@ export const Login = ({ onSwitchToRegister }) => {
                     type="text"
                     value={customApiUrl}
                     onChange={(e) => setCustomApiUrl(e.target.value)}
-                    placeholder="https://education-bi-backend.onrender.com/api"
+                    placeholder="https://education-intelligence-system.onrender.com/api"
                     className="flex-1 text-xs px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg focus:ring-1 focus:ring-brand-500 font-mono text-slate-800"
                   />
                   <button

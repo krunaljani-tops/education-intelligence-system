@@ -5,6 +5,13 @@
 [build.environment]
   NODE_VERSION = "22.13.1"
 
+# Netlify reverse proxy: seamlessly routes /api/* to the live Render backend
+[[redirects]]
+  from = "/api/*"
+  to = "https://education-intelligence-system.onrender.com/api/:splat"
+  status = 200
+  force = true
+
 # Single-Page Application (SPA) rewrite rule
 [[redirects]]
   from = "/*"

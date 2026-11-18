@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-// When running locally in dev, use relative '/api' so Vite proxies to 127.0.0.1:8000
-// When deploying to Netlify/Production, VITE_API_URL specifies the remote backend
-// Also allows dynamic runtime override via localStorage for zero-redeploy cloud testing
+// Dynamic API base URL resolution:
+// 1. Browser custom override in localStorage (if set by user)
+// 2. Build-time VITE_API_URL environment variable (if configured in Netlify)
+// 3. Fallback to relative '/api' (proxied by Vite locally and by Netlify edge proxy to Render in cloud)
 export const getApiBaseUrl = () => {
   const custom = typeof window !== 'undefined' ? localStorage.getItem('edu_api_url') : null;
   if (custom && custom.trim()) {
@@ -11,7 +12,7 @@ export const getApiBaseUrl = () => {
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL.replace(/\/+$/, '');
   }
-  return import.meta.env.DEV ? '/api' : 'http://localhost:8000/api';
+  return '/api';
 };
 
 export const setApiBaseUrl = (url) => {
