@@ -128,9 +128,10 @@ export const Register = ({ onSwitchToLogin }) => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-2 py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-semibold shadow-md transition-all"
+                  className="w-full mt-2 py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
                 >
-                  {loading ? 'Creating Account...' : 'Register Account'}
+                  <span>{loading ? 'Creating Account...' : 'Register Account'}</span>
+                  <CheckCircle2 className="w-4 h-4" />
                 </button>
               </form>
 
