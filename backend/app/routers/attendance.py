@@ -7,6 +7,12 @@ from backend.app.database import get_db
 from backend.app.models import Attendance
 from backend.app.schemas import AttendanceOut
 
+def is_valid_filter(val: Optional[str]) -> bool:
+    if val is None:
+        return False
+    s = str(val).strip()
+    return s != "" and s.lower() not in ("undefined", "null", "none", "all")
+
 router = APIRouter(prefix="/attendance", tags=["Attendance"])
 
 @router.get("", response_model=List[AttendanceOut])
@@ -19,12 +25,12 @@ def get_attendance(
     db: Session = Depends(get_db)
 ):
     q = db.query(Attendance)
-    if batch_id:
-        q = q.filter(Attendance.batch_id == batch_id)
-    if session_topic:
-        q = q.filter(Attendance.session_topic == session_topic)
-    if attendance_status:
-        q = q.filter(Attendance.attendance_status == attendance_status)
+    if is_valid_filter(batch_id):
+        q = q.filter(Attendance.batch_id == batch_id.strip())
+    if is_valid_filter(session_topic):
+        q = q.filter(Attendance.session_topic == session_topic.strip())
+    if is_valid_filter(attendance_status):
+        q = q.filter(Attendance.attendance_status == attendance_status.strip())
     return q.offset(skip).limit(limit).all()
 
 @router.get("/summary")

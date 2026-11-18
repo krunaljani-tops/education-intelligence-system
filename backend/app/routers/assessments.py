@@ -7,6 +7,12 @@ from backend.app.database import get_db
 from backend.app.models import Assessment
 from backend.app.schemas import AssessmentOut
 
+def is_valid_filter(val: Optional[str]) -> bool:
+    if val is None:
+        return False
+    s = str(val).strip()
+    return s != "" and s.lower() not in ("undefined", "null", "none", "all")
+
 router = APIRouter(prefix="/assessments", tags=["Assessments"])
 
 @router.get("", response_model=List[AssessmentOut])
@@ -20,14 +26,14 @@ def get_assessments(
     db: Session = Depends(get_db)
 ):
     q = db.query(Assessment)
-    if course:
-        q = q.filter(Assessment.course == course)
-    if assessment_type:
-        q = q.filter(Assessment.assessment_type == assessment_type)
-    if grade:
-        q = q.filter(Assessment.grade == grade)
-    if submission_status:
-        q = q.filter(Assessment.submission_status == submission_status)
+    if is_valid_filter(course):
+        q = q.filter(Assessment.course == course.strip())
+    if is_valid_filter(assessment_type):
+        q = q.filter(Assessment.assessment_type == assessment_type.strip())
+    if is_valid_filter(grade):
+        q = q.filter(Assessment.grade == grade.strip())
+    if is_valid_filter(submission_status):
+        q = q.filter(Assessment.submission_status == submission_status.strip())
     return q.offset(skip).limit(limit).all()
 
 @router.get("/summary")

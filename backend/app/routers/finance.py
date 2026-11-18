@@ -7,6 +7,12 @@ from backend.app.database import get_db
 from backend.app.models import FeePayment
 from backend.app.schemas import FeePaymentOut
 
+def is_valid_filter(val: Optional[str]) -> bool:
+    if val is None:
+        return False
+    s = str(val).strip()
+    return s != "" and s.lower() not in ("undefined", "null", "none", "all")
+
 router = APIRouter(prefix="/fees", tags=["Finance"])
 
 @router.get("", response_model=List[FeePaymentOut])
@@ -20,14 +26,14 @@ def get_fee_payments(
     db: Session = Depends(get_db)
 ):
     q = db.query(FeePayment)
-    if payment_status:
-        q = q.filter(FeePayment.payment_status == payment_status)
-    if payment_method:
-        q = q.filter(FeePayment.payment_method == payment_method)
-    if installment_no:
-        q = q.filter(FeePayment.installment_no == installment_no)
-    if student_id:
-        q = q.filter(FeePayment.student_id == student_id)
+    if is_valid_filter(payment_status):
+        q = q.filter(FeePayment.payment_status == payment_status.strip())
+    if is_valid_filter(payment_method):
+        q = q.filter(FeePayment.payment_method == payment_method.strip())
+    if installment_no is not None and str(installment_no).isdigit():
+        q = q.filter(FeePayment.installment_no == int(installment_no))
+    if is_valid_filter(student_id):
+        q = q.filter(FeePayment.student_id == student_id.strip())
     return q.offset(skip).limit(limit).all()
 
 @router.get("/summary")
