@@ -64,7 +64,7 @@ export const Dashboard = () => {
     return (
       <div className="p-8 flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center space-y-3">
-          <div className="w-8 h-8 border-3 border-brand-600 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-4 border-brand-600 border-t-transparent rounded-full animate-spin" />
           <p className="text-xs font-semibold text-slate-500">Computing real-time intelligence analytics...</p>
         </div>
       </div>
@@ -106,70 +106,70 @@ export const Dashboard = () => {
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <KPICard
           title="Total Students"
-          value={kpis.total_students ? kpis.total_students.toLocaleString() : "Data Not Available"}
+          value={kpis.total_students ? Number(kpis.total_students).toLocaleString() : "Data Not Available"}
           subtitle="Registered Profiles"
           icon={Users}
           color="blue"
         />
         <KPICard
           title="Total Enrollments"
-          value={kpis.total_enrollments ? kpis.total_enrollments.toLocaleString() : "Data Not Available"}
+          value={kpis.total_enrollments ? Number(kpis.total_enrollments).toLocaleString() : "Data Not Available"}
           subtitle="Across 45 Batches"
           icon={Layers}
           color="indigo"
         />
         <KPICard
           title="Active Enrollments"
-          value={kpis.active_enrollments ? kpis.active_enrollments.toLocaleString() : "Data Not Available"}
+          value={kpis.active_enrollments ? Number(kpis.active_enrollments).toLocaleString() : "Data Not Available"}
           subtitle={`${kpis.total_enrollments ? ((kpis.active_enrollments / kpis.total_enrollments) * 100).toFixed(1) : 0}% of Total`}
           icon={GraduationCap}
           color="emerald"
         />
         <KPICard
           title="Completed"
-          value={kpis.completed_enrollments ? kpis.completed_enrollments.toLocaleString() : "Data Not Available"}
+          value={kpis.completed_enrollments ? Number(kpis.completed_enrollments).toLocaleString() : "Data Not Available"}
           subtitle="Graduated Students"
           icon={CheckCircle2}
           color="cyan"
         />
         <KPICard
           title="Dropped Out"
-          value={kpis.dropped_enrollments ? kpis.dropped_enrollments.toLocaleString() : "Data Not Available"}
+          value={kpis.dropped_enrollments ? Number(kpis.dropped_enrollments).toLocaleString() : "Data Not Available"}
           subtitle={`${kpis.total_enrollments ? ((kpis.dropped_enrollments / kpis.total_enrollments) * 100).toFixed(1) : 0}% Attrition Rate`}
           icon={UserX}
           color="rose"
         />
         <KPICard
           title="Avg Attendance"
-          value={kpis.average_attendance ? `${kpis.average_attendance}%` : "Data Not Available"}
+          value={kpis.average_attendance !== undefined ? `${kpis.average_attendance}%` : "Data Not Available"}
           subtitle={`${kpis.present_count || 0} Present / ${kpis.late_count || 0} Late`}
           icon={CalendarCheck}
           color="purple"
         />
         <KPICard
           title="Avg Exam Score"
-          value={kpis.average_assessment_score ? `${kpis.average_assessment_score}%` : "Data Not Available"}
+          value={kpis.average_assessment_score !== undefined ? `${kpis.average_assessment_score}%` : "Data Not Available"}
           subtitle="Institutional Benchmark"
           icon={Award}
           color="blue"
         />
         <KPICard
           title="Total Fee Collection"
-          value={kpis.total_fee_collection !== undefined ? `₹${kpis.total_fee_collection.toLocaleString()}` : "Data Not Available"}
+          value={kpis.total_fee_collection !== undefined ? `₹${Number(kpis.total_fee_collection).toLocaleString()}` : "Data Not Available"}
           subtitle="Verified Paid Revenue"
           icon={IndianRupee}
           color="emerald"
         />
         <KPICard
           title="Pending Payments"
-          value={kpis.pending_payments !== undefined ? `₹${kpis.pending_payments.toLocaleString()}` : "Data Not Available"}
+          value={kpis.pending_payments !== undefined ? `₹${Number(kpis.pending_payments).toLocaleString()}` : "Data Not Available"}
           subtitle="Uncollected Pipeline"
           icon={Clock}
           color="amber"
         />
         <KPICard
           title="Failed Payments"
-          value={kpis.failed_payments !== undefined ? `₹${kpis.failed_payments.toLocaleString()}` : "Data Not Available"}
+          value={kpis.failed_payments !== undefined ? `₹${Number(kpis.failed_payments).toLocaleString()}` : "Data Not Available"}
           subtitle="Transaction Failures"
           icon={AlertCircle}
           color="rose"
@@ -187,7 +187,7 @@ export const Dashboard = () => {
             </div>
             <TrendingUp className="w-4 h-4 text-brand-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={charts.admissions_trend || []}>
                 <defs>
@@ -215,7 +215,7 @@ export const Dashboard = () => {
             </div>
             <GraduationCap className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.course_enrollments || []} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
@@ -237,7 +237,7 @@ export const Dashboard = () => {
             </div>
             <Activity className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="h-64 flex items-center justify-center">
+          <div className="h-64 min-h-[250px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -249,7 +249,7 @@ export const Dashboard = () => {
                   paddingAngle={3}
                   dataKey="count"
                   nameKey="status"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name || ''}: ${typeof percent === 'number' ? (percent * 100).toFixed(0) : 0}%`}
                 >
                   {(charts.enrollment_statuses || []).map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={PIE_COLORS[index % PIE_COLORS.length]} />
@@ -270,7 +270,7 @@ export const Dashboard = () => {
             </div>
             <Layers className="w-4 h-4 text-purple-600" />
           </div>
-          <div className="h-64 flex items-center justify-center">
+          <div className="h-64 min-h-[250px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -281,7 +281,7 @@ export const Dashboard = () => {
                   outerRadius={85}
                   dataKey="count"
                   nameKey="mode"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name || ''}: ${typeof percent === 'number' ? (percent * 100).toFixed(0) : 0}%`}
                 >
                   {(charts.delivery_modes || []).map((entry, index) => (
                     <Cell key={`cell-mode-${index}`} fill={['#3B82F6', '#10B981', '#F59E0B'][index % 3]} />
@@ -302,7 +302,7 @@ export const Dashboard = () => {
             </div>
             <CalendarCheck className="w-4 h-4 text-brand-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={charts.attendance_trend || []}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
@@ -324,7 +324,7 @@ export const Dashboard = () => {
             </div>
             <Layers className="w-4 h-4 text-cyan-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.batch_attendance || []}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
@@ -346,7 +346,7 @@ export const Dashboard = () => {
             </div>
             <Activity className="w-4 h-4 text-amber-600" />
           </div>
-          <div className="h-64 flex items-center justify-center">
+          <div className="h-64 min-h-[250px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -357,7 +357,7 @@ export const Dashboard = () => {
                   outerRadius={85}
                   dataKey="count"
                   nameKey="name"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name || ''}: ${typeof percent === 'number' ? (percent * 100).toFixed(0) : 0}%`}
                 >
                   <Cell fill="#10B981" />
                   <Cell fill="#F59E0B" />
@@ -378,7 +378,7 @@ export const Dashboard = () => {
             </div>
             <Award className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.course_assessment_performance || []} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#E2E8F0" />
@@ -400,7 +400,7 @@ export const Dashboard = () => {
             </div>
             <Award className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.grade_distribution || []}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
@@ -422,7 +422,7 @@ export const Dashboard = () => {
             </div>
             <CheckCircle2 className="w-4 h-4 text-brand-600" />
           </div>
-          <div className="h-64 flex items-center justify-center">
+          <div className="h-64 min-h-[250px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -433,7 +433,7 @@ export const Dashboard = () => {
                   outerRadius={85}
                   dataKey="count"
                   nameKey="status"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name || ''}: ${typeof percent === 'number' ? (percent * 100).toFixed(0) : 0}%`}
                 >
                   <Cell fill="#10B981" />
                   <Cell fill="#F59E0B" />
@@ -454,13 +454,13 @@ export const Dashboard = () => {
             </div>
             <IndianRupee className="w-4 h-4 text-emerald-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.fee_collection_trend || []}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                 <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `₹${(val/1000).toFixed(0)}k`} />
-                <Tooltip formatter={(val) => [`₹${val.toLocaleString()}`, "Collected Amount"]} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `₹${((val || 0)/1000).toFixed(0)}k`} />
+                <Tooltip formatter={(val) => [`₹${Number(val || 0).toLocaleString()}`, "Collected Amount"]} />
                 <Bar dataKey="collected_amount" fill="#10B981" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -476,7 +476,7 @@ export const Dashboard = () => {
             </div>
             <CreditCard className="w-4 h-4 text-purple-600" />
           </div>
-          <div className="h-64 flex items-center justify-center">
+          <div className="h-64 min-h-[250px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -487,13 +487,13 @@ export const Dashboard = () => {
                   outerRadius={85}
                   dataKey="amount"
                   nameKey="status"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name || ''}: ${typeof percent === 'number' ? (percent * 100).toFixed(0) : 0}%`}
                 >
                   <Cell fill="#10B981" />
                   <Cell fill="#F59E0B" />
                   <Cell fill="#EF4444" />
                 </Pie>
-                <Tooltip formatter={(val) => [`₹${val.toLocaleString()}`, "Amount"]} />
+                <Tooltip formatter={(val) => [`₹${Number(val || 0).toLocaleString()}`, "Amount"]} />
               </PieChart>
             </ResponsiveContainer>
           </div>
@@ -508,13 +508,13 @@ export const Dashboard = () => {
             </div>
             <IndianRupee className="w-4 h-4 text-indigo-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.payment_methods || []}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                 <XAxis dataKey="method" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `₹${(val/1000).toFixed(0)}k`} />
-                <Tooltip formatter={(val, name, item) => [`₹${val.toLocaleString()} (${item.payload.transactions} tx)`, "Paid Revenue"]} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `₹${((val || 0)/1000).toFixed(0)}k`} />
+                <Tooltip formatter={(val, name, item) => [`₹${Number(val || 0).toLocaleString()} (${item?.payload?.transactions || 0} tx)`, "Paid Revenue"]} />
                 <Bar dataKey="paid_amount" fill="#6366F1" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
@@ -530,7 +530,7 @@ export const Dashboard = () => {
             </div>
             <MapPin className="w-4 h-4 text-rose-600" />
           </div>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={charts.city_distribution || []}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />

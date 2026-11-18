@@ -112,7 +112,7 @@ export const AssessmentAnalytics = () => {
           <p className="text-xs text-slate-500 mb-4">
             Count of examination attempts by assigned grade bracket.
           </p>
-          <div className="h-64">
+          <div className="h-64 min-h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={gradeData}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
@@ -137,7 +137,7 @@ export const AssessmentAnalytics = () => {
           <p className="text-xs text-slate-500 mb-4">
             Submitted on time vs Late vs Missing assignments.
           </p>
-          <div className="h-64 flex items-center justify-center">
+          <div className="h-64 min-h-[250px] flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -148,7 +148,7 @@ export const AssessmentAnalytics = () => {
                   outerRadius={85}
                   dataKey="count"
                   nameKey="name"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  label={({ name, percent }) => `${name || ''}: ${typeof percent === 'number' ? (percent * 100).toFixed(0) : 0}%`}
                 >
                   <Cell fill="#10B981" />
                   <Cell fill="#F59E0B" />

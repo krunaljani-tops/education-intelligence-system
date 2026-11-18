@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Component } from 'react';
 import { useAuth } from './context/AuthContext';
 import { DemoBanner } from './components/DemoBanner';
 import { Navbar } from './components/Navbar';
@@ -25,6 +25,45 @@ import { AnalysisHistory } from './pages/AnalysisHistory';
 import { UserManagement } from './pages/UserManagement';
 
 import { agentService } from './services/api';
+
+// Error Boundary to prevent any blank page crashes
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error("ErrorBoundary caught an error:", error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-8 max-w-lg mx-auto my-12 bg-white rounded-2xl border border-rose-200 shadow-md text-center">
+          <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-3 font-bold text-xl">
+            !
+          </div>
+          <h3 className="text-base font-bold text-slate-900 mb-1">Rendering Encountered an Error</h3>
+          <p className="text-xs text-slate-500 mb-4">
+            {this.state.error?.message || "An unexpected error occurred while rendering the page view."}
+          </p>
+          <button
+            onClick={() => { this.setState({ hasError: false }); window.location.reload(); }}
+            className="px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-semibold shadow-sm"
+          >
+            Reload Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export function AppContent() {
   const { isAuthenticated, loading } = useAuth();
@@ -54,7 +93,7 @@ export function AppContent() {
   if (loading) {
     return (
       <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="w-8 h-8 border-3 border-brand-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-4 border-brand-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -117,7 +156,9 @@ export function AppContent() {
             isAnalyzing={isAnalyzing}
           />
           <main className="flex-1 p-6 md:p-8">
-            {renderActivePage()}
+            <ErrorBoundary>
+              {renderActivePage()}
+            </ErrorBoundary>
           </main>
         </div>
       </div>
@@ -126,5 +167,9 @@ export function AppContent() {
 }
 
 export default function App() {
-  return <AppContent />;
+  return (
+    <ErrorBoundary>
+      <AppContent />
+    </ErrorBoundary>
+  );
 }
