@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Sparkles, Lock, User, ShieldAlert, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Lock, User, ShieldAlert, ArrowRight, CheckCircle2, Server } from 'lucide-react';
+import { getApiBaseUrl, setApiBaseUrl } from '../services/api';
 
 export const Login = ({ onSwitchToRegister }) => {
   const { login } = useAuth();
@@ -8,6 +9,8 @@ export const Login = ({ onSwitchToRegister }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showApiConfig, setShowApiConfig] = useState(false);
+  const [customApiUrl, setCustomApiUrl] = useState(() => getApiBaseUrl());
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,7 +19,12 @@ export const Login = ({ onSwitchToRegister }) => {
     try {
       await login(username, password);
     } catch (err) {
-      setError(err.response?.data?.detail || 'Invalid username or password.');
+      if (!err.response) {
+        setError(`Cannot connect to Backend API at '${getApiBaseUrl()}'. If running on Netlify/cloud, configure your live backend API URL below.`);
+        setShowApiConfig(true);
+      } else {
+        setError(err.response?.data?.detail || 'Invalid username or password.');
+      }
     } finally {
       setLoading(false);
     }
@@ -142,6 +150,49 @@ export const Login = ({ onSwitchToRegister }) => {
             >
               Need a new account? Register here
             </button>
+          </div>
+
+          {/* Backend API Configuration for Cloud Deployments */}
+          <div className="mt-5 pt-4 border-t border-slate-100 text-center">
+            <button
+              type="button"
+              onClick={() => setShowApiConfig(!showApiConfig)}
+              className="text-[11px] text-slate-500 hover:text-slate-800 inline-flex items-center space-x-1.5 transition-colors"
+            >
+              <Server className="w-3.5 h-3.5 text-slate-400" />
+              <span>Backend API: <code className="text-slate-700 font-mono text-[10px] bg-slate-100 px-1 py-0.5 rounded">{getApiBaseUrl()}</code></span>
+            </button>
+
+            {showApiConfig && (
+              <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl text-left">
+                <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+                  Connect Live Backend API Endpoint
+                </label>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="text"
+                    value={customApiUrl}
+                    onChange={(e) => setCustomApiUrl(e.target.value)}
+                    placeholder="https://education-bi-backend.onrender.com/api"
+                    className="flex-1 text-xs px-2.5 py-1.5 bg-white border border-slate-200 rounded-lg focus:ring-1 focus:ring-brand-500 font-mono text-slate-800"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setApiBaseUrl(customApiUrl);
+                      setError('');
+                      setShowApiConfig(false);
+                    }}
+                    className="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900 transition-colors cursor-pointer"
+                  >
+                    Save
+                  </button>
+                </div>
+                <p className="text-[10px] text-slate-400 mt-1.5">
+                  Point to your deployed FastAPI backend URL (e.g. Render / Railway).
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

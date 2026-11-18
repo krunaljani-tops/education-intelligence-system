@@ -2,18 +2,36 @@ import axios from 'axios';
 
 // When running locally in dev, use relative '/api' so Vite proxies to 127.0.0.1:8000
 // When deploying to Netlify/Production, VITE_API_URL specifies the remote backend
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '/api' : 'http://localhost:8000/api');
+// Also allows dynamic runtime override via localStorage for zero-redeploy cloud testing
+export const getApiBaseUrl = () => {
+  const custom = typeof window !== 'undefined' ? localStorage.getItem('edu_api_url') : null;
+  if (custom && custom.trim()) {
+    return custom.trim().replace(/\/+$/, '');
+  }
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL.replace(/\/+$/, '');
+  }
+  return import.meta.env.DEV ? '/api' : 'http://localhost:8000/api';
+};
+
+export const setApiBaseUrl = (url) => {
+  if (url && url.trim()) {
+    localStorage.setItem('edu_api_url', url.trim().replace(/\/+$/, ''));
+  } else {
+    localStorage.removeItem('edu_api_url');
+  }
+};
 
 const api = axios.create({
-  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   timeout: 30000,
 });
 
-// Request interceptor to attach JWT token
+// Request interceptor to dynamically attach base URL and JWT token
 api.interceptors.request.use((config) => {
+  config.baseURL = getApiBaseUrl();
   const token = localStorage.getItem('token');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -194,7 +212,7 @@ export const reportService = {
     return res.data;
   },
   getDownloadUrl: (reportId) => {
-    return `${API_BASE_URL}/reports/${reportId}/download`;
+    return `${getApiBaseUrl()}/reports/${reportId}/download`;
   }
 };
 
