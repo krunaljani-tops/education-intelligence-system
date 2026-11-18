@@ -1,0 +1,13 @@
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "22.13.1"
+
+# Single Page Application (SPA) routing: rewrite all requests to index.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
