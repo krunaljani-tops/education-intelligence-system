@@ -3,16 +3,27 @@ import axios from 'axios';
 // Dynamic API base URL resolution:
 // 1. Browser custom override in localStorage (if set by user)
 // 2. Build-time VITE_API_URL environment variable (if configured in Netlify)
-// 3. Fallback to relative '/api' (proxied by Vite locally and by Netlify edge proxy to Render in cloud)
+// 3. In dev mode: relative '/api' proxied to 127.0.0.1:8000
+// 4. In production: live Render backend 'https://education-intelligence-system.onrender.com/api'
 export const getApiBaseUrl = () => {
-  const custom = typeof window !== 'undefined' ? localStorage.getItem('edu_api_url') : null;
-  if (custom && custom.trim()) {
-    return custom.trim().replace(/\/+$/, '');
+  if (typeof window !== 'undefined') {
+    const custom = localStorage.getItem('edu_api_url');
+    if (custom && custom.trim()) {
+      // Auto-heal: If user previously saved localhost:8000 while browsing on HTTPS, clear it
+      if (window.location.protocol === 'https:' && custom.includes('localhost')) {
+        localStorage.removeItem('edu_api_url');
+      } else {
+        return custom.trim().replace(/\/+$/, '');
+      }
+    }
   }
   if (import.meta.env.VITE_API_URL) {
     return import.meta.env.VITE_API_URL.replace(/\/+$/, '');
   }
-  return '/api';
+  if (import.meta.env.DEV) {
+    return '/api';
+  }
+  return 'https://education-intelligence-system.onrender.com/api';
 };
 
 export const setApiBaseUrl = (url) => {
