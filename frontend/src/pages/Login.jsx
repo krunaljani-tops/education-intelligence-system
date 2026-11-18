@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Sparkles, Lock, User, ShieldAlert, ArrowRight, CheckCircle2, Server } from 'lucide-react';
+import { Sparkles, Lock, User, ShieldAlert, ArrowRight, CheckCircle2, Server, Globe } from 'lucide-react';
 import { getApiBaseUrl, setApiBaseUrl } from '../services/api';
+
+const RENDER_BACKEND_URL = 'https://education-intelligence-system.onrender.com/api';
 
 export const Login = ({ onSwitchToRegister }) => {
   const { login } = useAuth();
@@ -12,6 +14,21 @@ export const Login = ({ onSwitchToRegister }) => {
   const [showApiConfig, setShowApiConfig] = useState(false);
   const [customApiUrl, setCustomApiUrl] = useState(() => getApiBaseUrl());
 
+  useEffect(() => {
+    // If running on HTTPS production and the URL is still pointing to localhost, auto-heal to Render backend
+    if (typeof window !== 'undefined' && window.location.protocol === 'https:' && getApiBaseUrl().includes('localhost')) {
+      setApiBaseUrl(RENDER_BACKEND_URL);
+      setCustomApiUrl(RENDER_BACKEND_URL);
+    }
+  }, []);
+
+  const handleApplyApiUrl = (url) => {
+    setApiBaseUrl(url);
+    setCustomApiUrl(url);
+    setError('');
+    setShowApiConfig(false);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -20,7 +37,7 @@ export const Login = ({ onSwitchToRegister }) => {
       await login(username, password);
     } catch (err) {
       if (!err.response) {
-        setError(`Cannot connect to Backend API at '${getApiBaseUrl()}'. If running on Netlify/cloud, configure your live backend API URL below.`);
+        setError(`Cannot connect to Backend API at '${getApiBaseUrl()}'. Switch to Render cloud backend below.`);
         setShowApiConfig(true);
       } else {
         setError(err.response?.data?.detail || 'Invalid username or password.');
@@ -164,8 +181,8 @@ export const Login = ({ onSwitchToRegister }) => {
             </button>
 
             {showApiConfig && (
-              <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl text-left">
-                <label className="block text-[11px] font-semibold text-slate-700 mb-1">
+              <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl text-left space-y-2">
+                <label className="block text-[11px] font-semibold text-slate-700">
                   Connect Live Backend API Endpoint
                 </label>
                 <div className="flex items-center space-x-2">
@@ -178,19 +195,29 @@ export const Login = ({ onSwitchToRegister }) => {
                   />
                   <button
                     type="button"
-                    onClick={() => {
-                      setApiBaseUrl(customApiUrl);
-                      setError('');
-                      setShowApiConfig(false);
-                    }}
+                    onClick={() => handleApplyApiUrl(customApiUrl)}
                     className="px-3 py-1.5 bg-slate-800 text-white rounded-lg text-xs font-semibold hover:bg-slate-900 transition-colors cursor-pointer"
                   >
                     Save
                   </button>
                 </div>
-                <p className="text-[10px] text-slate-400 mt-1.5">
-                  Point to your deployed FastAPI backend URL (e.g. Render / Railway).
-                </p>
+                <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => handleApplyApiUrl(RENDER_BACKEND_URL)}
+                    className="text-[10px] px-2 py-0.5 rounded bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200 font-medium inline-flex items-center space-x-1 cursor-pointer"
+                  >
+                    <Globe className="w-3 h-3" />
+                    <span>Use Render Cloud</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleApplyApiUrl('/api')}
+                    className="text-[10px] px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium cursor-pointer"
+                  >
+                    Use Netlify Proxy (/api)
+                  </button>
+                </div>
               </div>
             )}
           </div>
