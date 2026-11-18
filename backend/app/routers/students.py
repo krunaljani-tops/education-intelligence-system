@@ -13,6 +13,12 @@ from backend.app.schemas import (
 
 router = APIRouter(prefix="/students", tags=["Students"])
 
+def is_valid_filter(val: Optional[str]) -> bool:
+    if val is None:
+        return False
+    s = str(val).strip()
+    return s != "" and s.lower() not in ("undefined", "null", "none", "all")
+
 @router.get("", response_model=List[StudentOut])
 def get_students(
     city: Optional[str] = Query(None),
@@ -24,14 +30,14 @@ def get_students(
     db: Session = Depends(get_db)
 ):
     q = db.query(Student)
-    if city:
-        q = q.filter(Student.city == city)
-    if education_level:
-        q = q.filter(Student.education_level == education_level)
-    if gender:
-        q = q.filter(Student.gender == gender)
-    if search:
-        search_filter = f"%{search}%"
+    if is_valid_filter(city):
+        q = q.filter(Student.city == city.strip())
+    if is_valid_filter(education_level):
+        q = q.filter(Student.education_level == education_level.strip())
+    if is_valid_filter(gender):
+        q = q.filter(Student.gender == gender.strip())
+    if is_valid_filter(search):
+        search_filter = f"%{search.strip()}%"
         q = q.filter((Student.student_name.ilike(search_filter)) | (Student.student_id.ilike(search_filter)))
 
     return q.offset(skip).limit(limit).all()

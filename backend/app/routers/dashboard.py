@@ -11,6 +11,12 @@ from backend.app.models import (
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
+def is_valid_filter(val: Optional[str]) -> bool:
+    if val is None:
+        return False
+    s = str(val).strip()
+    return s != "" and s.lower() not in ("undefined", "null", "none", "all")
+
 @router.get("/overview")
 def get_dashboard_overview(
     course: Optional[str] = Query(None),
@@ -22,14 +28,14 @@ def get_dashboard_overview(
 ):
     # 1. Base Query Filters for Enrollments
     enr_q = db.query(Enrollment)
-    if course:
-        enr_q = enr_q.filter(Enrollment.course == course)
-    if batch_id:
-        enr_q = enr_q.filter(Enrollment.batch_id == batch_id)
-    if enrollment_status:
-        enr_q = enr_q.filter(Enrollment.enrollment_status == enrollment_status)
-    if delivery_mode:
-        enr_q = enr_q.filter(Enrollment.delivery_mode == delivery_mode)
+    if is_valid_filter(course):
+        enr_q = enr_q.filter(Enrollment.course == course.strip())
+    if is_valid_filter(batch_id):
+        enr_q = enr_q.filter(Enrollment.batch_id == batch_id.strip())
+    if is_valid_filter(enrollment_status):
+        enr_q = enr_q.filter(Enrollment.enrollment_status == enrollment_status.strip())
+    if is_valid_filter(delivery_mode):
+        enr_q = enr_q.filter(Enrollment.delivery_mode == delivery_mode.strip())
     
     total_enrollments = enr_q.count()
     active_enrollments = enr_q.filter(Enrollment.enrollment_status == "Active").count()

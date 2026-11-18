@@ -7,6 +7,12 @@ from backend.app.database import get_db
 from backend.app.models import Enrollment
 from backend.app.schemas import EnrollmentOut
 
+def is_valid_filter(val: Optional[str]) -> bool:
+    if val is None:
+        return False
+    s = str(val).strip()
+    return s != "" and s.lower() not in ("undefined", "null", "none", "all")
+
 router = APIRouter(prefix="/enrollments", tags=["Enrollments"])
 
 @router.get("", response_model=List[EnrollmentOut])
@@ -20,14 +26,14 @@ def get_enrollments(
     db: Session = Depends(get_db)
 ):
     q = db.query(Enrollment)
-    if course:
-        q = q.filter(Enrollment.course == course)
-    if batch_id:
-        q = q.filter(Enrollment.batch_id == batch_id)
-    if enrollment_status:
-        q = q.filter(Enrollment.enrollment_status == enrollment_status)
-    if delivery_mode:
-        q = q.filter(Enrollment.delivery_mode == delivery_mode)
+    if is_valid_filter(course):
+        q = q.filter(Enrollment.course == course.strip())
+    if is_valid_filter(batch_id):
+        q = q.filter(Enrollment.batch_id == batch_id.strip())
+    if is_valid_filter(enrollment_status):
+        q = q.filter(Enrollment.enrollment_status == enrollment_status.strip())
+    if is_valid_filter(delivery_mode):
+        q = q.filter(Enrollment.delivery_mode == delivery_mode.strip())
     return q.offset(skip).limit(limit).all()
 
 @router.get("/course-analysis")

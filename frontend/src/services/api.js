@@ -56,17 +56,21 @@ export const authService = {
   }
 };
 
+// Helper to clean query parameters (removes undefined, null, empty strings)
+const cleanParams = (params = {}) => {
+  const cleaned = {};
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== '' && value !== 'undefined' && value !== 'null') {
+      cleaned[key] = value;
+    }
+  }
+  return cleaned;
+};
+
 // ----------------- Dashboard API -----------------
 export const dashboardService = {
   getOverview: async (filters = {}) => {
-    const params = new URLSearchParams();
-    if (filters.course) params.append('course', filters.course);
-    if (filters.batch_id) params.append('batch_id', filters.batch_id);
-    if (filters.enrollment_status) params.append('enrollment_status', filters.enrollment_status);
-    if (filters.delivery_mode) params.append('delivery_mode', filters.delivery_mode);
-    if (filters.month) params.append('month', filters.month);
-
-    const res = await api.get(`/dashboard/overview?${params.toString()}`);
+    const res = await api.get('/dashboard/overview', { params: cleanParams(filters) });
     return res.data;
   }
 };
@@ -74,8 +78,7 @@ export const dashboardService = {
 // ----------------- Students API -----------------
 export const studentService = {
   getStudents: async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    const res = await api.get(`/students?${query}`);
+    const res = await api.get('/students', { params: cleanParams(params) });
     return res.data;
   },
   getStudent: async (studentId) => {
@@ -91,8 +94,7 @@ export const studentService = {
 // ----------------- Enrollments API -----------------
 export const enrollmentService = {
   getEnrollments: async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    const res = await api.get(`/enrollments?${query}`);
+    const res = await api.get('/enrollments', { params: cleanParams(params) });
     return res.data;
   },
   getCourseAnalysis: async () => {
@@ -104,8 +106,7 @@ export const enrollmentService = {
 // ----------------- Attendance API -----------------
 export const attendanceService = {
   getAttendance: async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    const res = await api.get(`/attendance?${query}`);
+    const res = await api.get('/attendance', { params: cleanParams(params) });
     return res.data;
   },
   getSummary: async () => {
@@ -117,8 +118,7 @@ export const attendanceService = {
 // ----------------- Assessments API -----------------
 export const assessmentService = {
   getAssessments: async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    const res = await api.get(`/assessments?${query}`);
+    const res = await api.get('/assessments', { params: cleanParams(params) });
     return res.data;
   },
   getSummary: async () => {
@@ -130,8 +130,7 @@ export const assessmentService = {
 // ----------------- Finance API -----------------
 export const financeService = {
   getFees: async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    const res = await api.get(`/fees?${query}`);
+    const res = await api.get('/fees', { params: cleanParams(params) });
     return res.data;
   },
   getSummary: async () => {
@@ -167,8 +166,7 @@ export const chatService = {
 // ----------------- Recommendations & Approvals API -----------------
 export const recommendationService = {
   getRecommendations: async (params = {}) => {
-    const query = new URLSearchParams(params).toString();
-    const res = await api.get(`/recommendations?${query}`);
+    const res = await api.get('/recommendations', { params: cleanParams(params) });
     return res.data;
   },
   approve: async (id, comments = '') => {

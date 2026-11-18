@@ -9,6 +9,12 @@ from backend.app.schemas import (
 )
 from backend.app.auth import get_current_user, require_roles
 
+def is_valid_filter(val: Optional[str]) -> bool:
+    if val is None:
+        return False
+    s = str(val).strip()
+    return s != "" and s.lower() not in ("undefined", "null", "none", "all")
+
 router = APIRouter(prefix="/recommendations", tags=["Recommendations & Approval"])
 
 @router.get("", response_model=List[RecommendationOut])
@@ -19,12 +25,12 @@ def get_recommendations(
     db: Session = Depends(get_db)
 ):
     q = db.query(AIRecommendation)
-    if status_filter:
-        q = q.filter(AIRecommendation.status == status_filter)
-    if category:
-        q = q.filter(AIRecommendation.category == category)
-    if priority:
-        q = q.filter(AIRecommendation.priority == priority)
+    if is_valid_filter(status_filter):
+        q = q.filter(AIRecommendation.status == status_filter.strip())
+    if is_valid_filter(category):
+        q = q.filter(AIRecommendation.category == category.strip())
+    if is_valid_filter(priority):
+        q = q.filter(AIRecommendation.priority == priority.strip())
     return q.order_by(AIRecommendation.id.desc()).all()
 
 @router.post("/{recommendation_id}/approve", response_model=RecommendationOut)
