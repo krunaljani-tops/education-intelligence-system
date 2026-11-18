@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Users, GraduationCap, CheckCircle2, UserX, Clock, 
-  CalendarCheck, Award, IndianRupee, AlertCircle, 
-  TrendingUp, TrendingDown, Layers, MapPin, Activity
+import {
+  Users, GraduationCap, CheckCircle2, UserX, Clock,
+  CalendarCheck, Award, IndianRupee, AlertCircle,
+  TrendingUp, TrendingDown, Layers, MapPin, Activity, CreditCard
 } from 'lucide-react';
-import { 
-  ResponsiveContainer, AreaChart, Area, BarChart, Bar, 
-  PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, 
-  Tooltip, Legend, CartesianGrid 
+import {
+  ResponsiveContainer, AreaChart, Area, BarChart, Bar,
+  PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis,
+  Tooltip, Legend, CartesianGrid
 } from 'recharts';
 
 import { dashboardService } from '../services/api';
@@ -89,10 +89,10 @@ export const Dashboard = () => {
       </div>
 
       {/* Filter Bar */}
-      <FilterBar 
-        filters={filters} 
-        onFilterChange={handleFilterChange} 
-        onReset={handleResetFilters} 
+      <FilterBar
+        filters={filters}
+        onFilterChange={handleFilterChange}
+        onReset={handleResetFilters}
       />
 
       {error && (
@@ -192,8 +192,8 @@ export const Dashboard = () => {
               <AreaChart data={charts.admissions_trend || []}>
                 <defs>
                   <linearGradient id="colorAdm" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.4}/>
-                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0}/>
+                    <stop offset="5%" stopColor="#3B82F6" stopOpacity={0.4} />
+                    <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
@@ -459,7 +459,7 @@ export const Dashboard = () => {
               <BarChart data={charts.fee_collection_trend || []}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                 <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `₹${((val || 0)/1000).toFixed(0)}k`} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `₹${((val || 0) / 1000).toFixed(0)}k`} />
                 <Tooltip formatter={(val) => [`₹${Number(val || 0).toLocaleString()}`, "Collected Amount"]} />
                 <Bar dataKey="collected_amount" fill="#10B981" radius={[4, 4, 0, 0]} />
               </BarChart>
@@ -513,7 +513,7 @@ export const Dashboard = () => {
               <BarChart data={charts.payment_methods || []}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E2E8F0" />
                 <XAxis dataKey="method" tick={{ fontSize: 11 }} />
-                <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `₹${((val || 0)/1000).toFixed(0)}k`} />
+                <YAxis tick={{ fontSize: 10 }} tickFormatter={(val) => `₹${((val || 0) / 1000).toFixed(0)}k`} />
                 <Tooltip formatter={(val, name, item) => [`₹${Number(val || 0).toLocaleString()} (${item?.payload?.transactions || 0} tx)`, "Paid Revenue"]} />
                 <Bar dataKey="paid_amount" fill="#6366F1" radius={[4, 4, 0, 0]} />
               </BarChart>
