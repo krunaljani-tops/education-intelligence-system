@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Award, CheckCircle2, Clock, AlertTriangle, BookOpen, Layers } from 'lucide-react';
-import { 
-  ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell, 
-  XAxis, YAxis, Tooltip, CartesianGrid, Legend 
+import { Award, CheckCircle2, Clock, AlertTriangle, AlertCircle, BookOpen, Layers } from 'lucide-react';
+import {
+  ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell,
+  XAxis, YAxis, Tooltip, CartesianGrid, Legend
 } from 'recharts';
 import { assessmentService } from '../services/api';
 
