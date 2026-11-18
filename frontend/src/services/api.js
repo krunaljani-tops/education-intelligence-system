@@ -1,12 +1,15 @@
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// When running locally in dev, use relative '/api' so Vite proxies to 127.0.0.1:8000
+// When deploying to Netlify/Production, VITE_API_URL specifies the remote backend
+const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '/api' : 'http://localhost:8000/api');
 
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 30000,
 });
 
 // Request interceptor to attach JWT token
@@ -20,17 +23,14 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
-// Response interceptor to handle unauthenticated responses
+// Response interceptor to handle unauthenticated responses safely
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Clear token if expired or invalid
-      if (!window.location.pathname.includes('/login') && !window.location.pathname.includes('/register')) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
-      }
+      // Clear invalid credentials without infinite reload loops
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
     return Promise.reject(error);
   }
