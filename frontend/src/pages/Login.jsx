@@ -98,10 +98,10 @@ export const Login = ({ onSwitchToRegister }) => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-2.5 px-4 bg-brand-600 hover:bg-brand-700 text-white rounded-xl text-xs font-semibold shadow-md shadow-brand-500/20 transition-all flex items-center justify-center space-x-1.5"
+              className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white rounded-xl text-sm font-bold shadow-lg shadow-blue-500/30 transition-all flex items-center justify-center space-x-2 cursor-pointer disabled:opacity-50"
             >
               <span>{loading ? 'Authenticating...' : 'Sign In'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4" />
             </button>
           </form>
 
