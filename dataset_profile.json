@@ -1,0 +1,416 @@
+{
+  "Students": {
+    "num_records": 1200,
+    "columns": [
+      "student_id",
+      "student_name",
+      "age",
+      "gender",
+      "city",
+      "email",
+      "admission_date",
+      "education_level"
+    ],
+    "dtypes": {
+      "student_id": "str",
+      "student_name": "str",
+      "age": "int64",
+      "gender": "str",
+      "city": "str",
+      "email": "str",
+      "admission_date": "str",
+      "education_level": "str"
+    },
+    "missing_values": {
+      "student_id": 0,
+      "student_name": 0,
+      "age": 0,
+      "gender": 0,
+      "city": 0,
+      "email": 0,
+      "admission_date": 0,
+      "education_level": 0
+    },
+    "duplicate_rows": 0,
+    "unique_values": {
+      "student_id": 1200,
+      "student_name": 296,
+      "age": 20,
+      "gender": 3,
+      "city": 10,
+      "email": 1172,
+      "admission_date": 183,
+      "education_level": 4
+    },
+    "sample": [
+      {
+        "student_id": "STU00001",
+        "student_name": "Sara Shah",
+        "age": 16,
+        "gender": "Other",
+        "city": "Pune",
+        "email": "sara.shah80@example.com",
+        "admission_date": "2026-10-31",
+        "education_level": "Professional"
+      },
+      {
+        "student_id": "STU00002",
+        "student_name": "Aadhya Rao",
+        "age": 24,
+        "gender": "Female",
+        "city": "Vadodara",
+        "email": "aadhya.rao57@example.com",
+        "admission_date": "2026-05-29",
+        "education_level": "Diploma"
+      },
+      {
+        "student_id": "STU00003",
+        "student_name": "Nisha Gandhi",
+        "age": 17,
+        "gender": "Female",
+        "city": "Bharuch",
+        "email": "nisha.gandhi38@example.com",
+        "admission_date": "2026-09-06",
+        "education_level": "Professional"
+      }
+    ]
+  },
+  "Enrollments": {
+    "num_records": 1600,
+    "columns": [
+      "enrollment_id",
+      "student_id",
+      "course",
+      "enrollment_date",
+      "batch_id",
+      "course_fee",
+      "enrollment_status",
+      "delivery_mode"
+    ],
+    "dtypes": {
+      "enrollment_id": "str",
+      "student_id": "str",
+      "course": "str",
+      "enrollment_date": "str",
+      "batch_id": "str",
+      "course_fee": "float64",
+      "enrollment_status": "str",
+      "delivery_mode": "str"
+    },
+    "missing_values": {
+      "enrollment_id": 0,
+      "student_id": 0,
+      "course": 0,
+      "enrollment_date": 0,
+      "batch_id": 0,
+      "course_fee": 0,
+      "enrollment_status": 0,
+      "delivery_mode": 0
+    },
+    "duplicate_rows": 0,
+    "unique_values": {
+      "enrollment_id": 1600,
+      "student_id": 886,
+      "course": 8,
+      "enrollment_date": 184,
+      "batch_id": 45,
+      "course_fee": 1599,
+      "enrollment_status": 4,
+      "delivery_mode": 3
+    },
+    "sample": [
+      {
+        "enrollment_id": "ENR00001",
+        "student_id": "STU00228",
+        "course": "Python Development",
+        "enrollment_date": "2026-09-30",
+        "batch_id": "BAT028",
+        "course_fee": 27992.73,
+        "enrollment_status": "Dropped",
+        "delivery_mode": "Hybrid"
+      },
+      {
+        "enrollment_id": "ENR00002",
+        "student_id": "STU00253",
+        "course": "Cloud Computing",
+        "enrollment_date": "2026-10-23",
+        "batch_id": "BAT009",
+        "course_fee": 55828.85,
+        "enrollment_status": "Completed",
+        "delivery_mode": "Offline"
+      },
+      {
+        "enrollment_id": "ENR00003",
+        "student_id": "STU00113",
+        "course": "Cyber Security",
+        "enrollment_date": "2026-07-07",
+        "batch_id": "BAT002",
+        "course_fee": 26662.76,
+        "enrollment_status": "On Hold",
+        "delivery_mode": "Offline"
+      }
+    ]
+  },
+  "Attendance": {
+    "num_records": 2500,
+    "columns": [
+      "attendance_id",
+      "student_id",
+      "batch_id",
+      "attendance_date",
+      "session_topic",
+      "attendance_status",
+      "session_duration_minutes"
+    ],
+    "dtypes": {
+      "attendance_id": "str",
+      "student_id": "str",
+      "batch_id": "str",
+      "attendance_date": "str",
+      "session_topic": "str",
+      "attendance_status": "str",
+      "session_duration_minutes": "int64"
+    },
+    "missing_values": {
+      "attendance_id": 0,
+      "student_id": 0,
+      "batch_id": 0,
+      "attendance_date": 0,
+      "session_topic": 0,
+      "attendance_status": 0,
+      "session_duration_minutes": 0
+    },
+    "duplicate_rows": 0,
+    "unique_values": {
+      "attendance_id": 2500,
+      "student_id": 1056,
+      "batch_id": 45,
+      "attendance_date": 184,
+      "session_topic": 7,
+      "attendance_status": 3,
+      "session_duration_minutes": 3
+    },
+    "sample": [
+      {
+        "attendance_id": "ATT00001",
+        "student_id": "STU00043",
+        "batch_id": "BAT020",
+        "attendance_date": "2026-07-20",
+        "session_topic": "React",
+        "attendance_status": "Present",
+        "session_duration_minutes": 60
+      },
+      {
+        "attendance_id": "ATT00002",
+        "student_id": "STU00820",
+        "batch_id": "BAT012",
+        "attendance_date": "2026-05-03",
+        "session_topic": "SQL",
+        "attendance_status": "Present",
+        "session_duration_minutes": 60
+      },
+      {
+        "attendance_id": "ATT00003",
+        "student_id": "STU00925",
+        "batch_id": "BAT032",
+        "attendance_date": "2026-05-20",
+        "session_topic": "Machine Learning",
+        "attendance_status": "Present",
+        "session_duration_minutes": 90
+      }
+    ]
+  },
+  "Assessments": {
+    "num_records": 1800,
+    "columns": [
+      "assessment_id",
+      "student_id",
+      "course",
+      "assessment_date",
+      "assessment_type",
+      "score",
+      "max_score",
+      "grade",
+      "submission_status"
+    ],
+    "dtypes": {
+      "assessment_id": "str",
+      "student_id": "str",
+      "course": "str",
+      "assessment_date": "str",
+      "assessment_type": "str",
+      "score": "int64",
+      "max_score": "int64",
+      "grade": "str",
+      "submission_status": "str"
+    },
+    "missing_values": {
+      "assessment_id": 0,
+      "student_id": 0,
+      "course": 0,
+      "assessment_date": 0,
+      "assessment_type": 0,
+      "score": 0,
+      "max_score": 0,
+      "grade": 0,
+      "submission_status": 0
+    },
+    "duplicate_rows": 0,
+    "unique_values": {
+      "assessment_id": 1800,
+      "student_id": 934,
+      "course": 8,
+      "assessment_date": 184,
+      "assessment_type": 4,
+      "score": 76,
+      "max_score": 1,
+      "grade": 4,
+      "submission_status": 3
+    },
+    "sample": [
+      {
+        "assessment_id": "ASM00001",
+        "student_id": "STU00909",
+        "course": "Full Stack Development",
+        "assessment_date": "2026-06-29",
+        "assessment_type": "Assignment",
+        "score": 46,
+        "max_score": 100,
+        "grade": "D",
+        "submission_status": "Late"
+      },
+      {
+        "assessment_id": "ASM00002",
+        "student_id": "STU00337",
+        "course": "Cloud Computing",
+        "assessment_date": "2026-08-17",
+        "assessment_type": "Mock Interview",
+        "score": 77,
+        "max_score": 100,
+        "grade": "B",
+        "submission_status": "Submitted"
+      },
+      {
+        "assessment_id": "ASM00003",
+        "student_id": "STU00778",
+        "course": "Digital Marketing",
+        "assessment_date": "2026-06-17",
+        "assessment_type": "Project",
+        "score": 33,
+        "max_score": 100,
+        "grade": "D",
+        "submission_status": "Late"
+      }
+    ]
+  },
+  "Fee_Payments": {
+    "num_records": 1200,
+    "columns": [
+      "payment_id",
+      "student_id",
+      "payment_date",
+      "amount",
+      "payment_method",
+      "payment_status",
+      "installment_no",
+      "receipt_no"
+    ],
+    "dtypes": {
+      "payment_id": "str",
+      "student_id": "str",
+      "payment_date": "str",
+      "amount": "float64",
+      "payment_method": "str",
+      "payment_status": "str",
+      "installment_no": "int64",
+      "receipt_no": "str"
+    },
+    "missing_values": {
+      "payment_id": 0,
+      "student_id": 0,
+      "payment_date": 0,
+      "amount": 0,
+      "payment_method": 0,
+      "payment_status": 0,
+      "installment_no": 0,
+      "receipt_no": 0
+    },
+    "duplicate_rows": 0,
+    "unique_values": {
+      "payment_id": 1200,
+      "student_id": 764,
+      "payment_date": 182,
+      "amount": 1200,
+      "payment_method": 4,
+      "payment_status": 3,
+      "installment_no": 6,
+      "receipt_no": 1200
+    },
+    "sample": [
+      {
+        "payment_id": "PAY00001",
+        "student_id": "STU00908",
+        "payment_date": "2026-05-06",
+        "amount": 6861.76,
+        "payment_method": "Card",
+        "payment_status": "Paid",
+        "installment_no": 2,
+        "receipt_no": "REC000001"
+      },
+      {
+        "payment_id": "PAY00002",
+        "student_id": "STU00188",
+        "payment_date": "2026-07-11",
+        "amount": 5151.84,
+        "payment_method": "Bank Transfer",
+        "payment_status": "Pending",
+        "installment_no": 2,
+        "receipt_no": "REC000002"
+      },
+      {
+        "payment_id": "PAY00003",
+        "student_id": "STU00935",
+        "payment_date": "2026-09-16",
+        "amount": 1798.18,
+        "payment_method": "Card",
+        "payment_status": "Paid",
+        "installment_no": 2,
+        "receipt_no": "REC000003"
+      }
+    ]
+  },
+  "README": {
+    "num_records": 6,
+    "columns": [
+      "Field",
+      "Details"
+    ],
+    "dtypes": {
+      "Field": "str",
+      "Details": "str"
+    },
+    "missing_values": {
+      "Field": 0,
+      "Details": 0
+    },
+    "duplicate_rows": 0,
+    "unique_values": {
+      "Field": 6,
+      "Details": 6
+    },
+    "sample": [
+      {
+        "Field": "Dataset",
+        "Details": "Training institute student, course, attendance, assessment and fee analytics."
+      },
+      {
+        "Field": "Data type",
+        "Details": "Synthetic demonstration data; not real people or organizations"
+      },
+      {
+        "Field": "Coverage",
+        "Details": "2026-05-01 through 2026-10-31"
+      }
+    ]
+  }
+}
