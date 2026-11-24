@@ -28,14 +28,15 @@ from backend.app.models import (
 def get_configured_llm() -> Optional[LLM]:
     """Resolves available LLM provider (Gemini, OpenAI, Ollama) or returns None for tool-driven mode."""
     if settings.GEMINI_API_KEY and settings.GEMINI_API_KEY.strip():
-        try:
-            return LLM(
-                model="gemini/gemini-1.5-flash",
-                api_key=settings.GEMINI_API_KEY.strip(),
-                temperature=0.2
-            )
-        except Exception as e:
-            print(f"[CrewAI LLM Warning] Gemini LLM init: {e}")
+        for model_name in ["gemini/gemini-3.5-flash-lite", "gemini/gemini-3.8-flash", "gemini/gemini-flash-latest"]:
+            try:
+                return LLM(
+                    model=model_name,
+                    api_key=settings.GEMINI_API_KEY.strip(),
+                    temperature=0.2
+                )
+            except Exception as e:
+                print(f"[CrewAI LLM Warning] Gemini LLM init for {model_name}: {e}")
 
     if settings.OPENAI_API_KEY and settings.OPENAI_API_KEY.strip():
         try:

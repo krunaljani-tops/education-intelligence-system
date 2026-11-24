@@ -77,6 +77,20 @@ def execute_safe_sql(db: Session, query_str: str) -> Tuple[Optional[List[Dict[st
         return None, str(e)
 
 
+def call_gemini_api(api_key: str, prompt: str) -> Optional[str]:
+    """Calls Google Gemini API across supported models (gemini-3.5-flash-lite, gemini-3.8-flash, etc.)."""
+    models = ["gemini-3.5-flash-lite", "gemini-3.8-flash", "gemini-flash-latest"]
+    for model_name in models:
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key.strip()}"
+            res = requests.post(url, json={"contents": [{"parts": [{"text": prompt}]}]}, timeout=12)
+            if res.status_code == 200:
+                data = res.json()
+                return data["candidates"][0]["content"]["parts"][0]["text"].strip()
+        except Exception as e:
+            logger.warning(f"Gemini API attempt with {model_name} failed: {e}")
+    return None
+
 def call_llm_for_sql_and_answer(user_query: str, db: Session) -> Optional[Dict[str, Any]]:
     """
     Two-stage LLM workflow:
@@ -102,18 +116,15 @@ def call_llm_for_sql_and_answer(user_query: str, db: Session) -> Optional[Dict[s
 
     sql_query = None
     if gemini_key:
-        try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key.strip()}"
-            res = requests.post(url, json={"contents": [{"parts": [{"text": sql_prompt}]}]}, timeout=7)
-            if res.status_code == 200:
-                text_resp = res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
-                # Extract JSON block
-                m = re.search(r'\{.*\}', text_resp, re.DOTALL)
-                if m:
+        text_resp = call_gemini_api(gemini_key, sql_prompt)
+        if text_resp:
+            m = re.search(r'\{.*\}', text_resp, re.DOTALL)
+            if m:
+                try:
                     parsed = json.loads(m.group(0))
                     sql_query = parsed.get("sql")
-        except Exception as e:
-            logger.warning(f"Gemini SQL generation error: {e}")
+                except Exception:
+                    pass
 
     elif openai_key:
         try:
@@ -161,13 +172,7 @@ def call_llm_for_sql_and_answer(user_query: str, db: Session) -> Optional[Dict[s
 
     final_answer = None
     if gemini_key:
-        try:
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={gemini_key.strip()}"
-            res = requests.post(url, json={"contents": [{"parts": [{"text": synthesis_prompt}]}]}, timeout=7)
-            if res.status_code == 200:
-                final_answer = res.json()["candidates"][0]["content"]["parts"][0]["text"].strip()
-        except Exception:
-            pass
+        final_answer = call_gemini_api(gemini_key, synthesis_prompt)
     elif openai_key:
         try:
             url = "https://api.openai.com/v1/chat/completions"
