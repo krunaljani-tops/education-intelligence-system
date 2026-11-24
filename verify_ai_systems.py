@@ -1,5 +1,13 @@
 import os
 import sys
+import subprocess
+
+# Auto-detect and switch to the project's virtual environment python if run via system python
+venv_python = os.path.abspath(os.path.join(os.path.dirname(__file__), "backend", "venv", "Scripts", "python.exe"))
+if os.path.exists(venv_python) and sys.executable.lower() != venv_python.lower():
+    ret = subprocess.run([venv_python] + sys.argv)
+    sys.exit(ret.returncode)
+
 import json
 import requests
 from dotenv import load_dotenv
