@@ -99,7 +99,7 @@ class EducationStrategyAgent:
             "category": "Curriculum & Institutional Growth",
             "problem_identified": f"Enrollment skew across programs: '{top_course}' experiences peak demand while '{lowest_course}' underperforms in intake.",
             "dataset_evidence": f"Analysis of 8 programs across 45 batches highlights delivery imbalance across online, hybrid, and offline sections.",
-            "recommended_action": "Expand lab infrastructure and hybrid batch capacity for '{top_course}' while revamping curriculum modules and industry guest lectures for '{lowest_course}'.",
+            "recommended_action": f"Expand lab infrastructure and hybrid batch capacity for '{top_course}' while revamping curriculum modules and industry guest lectures for '{lowest_course}'.",
             "expected_benefit": "Optimize faculty utilization, increase seat fulfillment across low-volume batches, and expand revenue capacity.",
             "priority": "MEDIUM",
             "confidence_level": 0.87,
